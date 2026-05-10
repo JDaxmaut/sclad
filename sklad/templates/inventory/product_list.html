@@ -1,0 +1,141 @@
+{% extends 'inventory/base.html' %}
+{% load humanize %}
+
+{% block title %}Список товаров{% endblock %}
+
+{% block content %}
+<!-- Кнопка добавления и статистика -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="/admin/inventory/product/add/" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i> Добавить товар
+            </a>
+            <a href="/admin/inventory/category/add/" class="btn btn-outline-secondary">
+                <i class="bi bi-folder-plus"></i> Добавить категорию
+            </a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <form method="get" class="d-flex gap-2">
+            <select name="category" class="form-select" onchange="this.form.submit()">
+                <option value="">Все категории</option>
+                {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+                    {{ cat.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+</div>
+
+<!-- Статистика -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card h-100">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-muted mb-1">Всего товаров</h6>
+                    <h3 class="mb-0">{{ products.count }}</h3>
+                </div>
+                <i class="bi bi-box-seam stat-icon text-primary"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card h-100 {% if low_stock_count > 0 %}border-warning{% endif %}">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-muted mb-1">Заканчивается</h6>
+                    <h3 class="mb-0 text-warning">{{ low_stock_count }}</h3>
+                </div>
+                <i class="bi bi-exclamation-triangle stat-icon text-warning"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card h-100 {% if out_of_stock_count > 0 %}border-danger{% endif %}">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-muted mb-1">Нет на складе</h6>
+                    <h3 class="mb-0 text-danger">{{ out_of_stock_count }}</h3>
+                </div>
+                <i class="bi bi-x-circle stat-icon text-danger"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card h-100">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="text-muted mb-1">На сумму</h6>
+                    <h3 class="mb-0 text-success">{{ total_value|floatformat:0|intcomma }} ₽</h3>
+                </div>
+                <i class="bi bi-currency-ruble stat-icon text-success"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Карточки товаров -->
+{% if products %}
+<div class="row g-4">
+    {% for product in products %}
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+        <div class="card product-card h-100 {% if product.quantity == 0 %}card-out-of-stock{% elif product.is_low_stock %}card-low-stock{% endif %}">
+            <div class="card-body d-flex flex-column">
+                <!-- Название и категория -->
+                <div class="mb-2">
+                    <h5 class="product-name" title="{{ product.name }}">{{ product.name }}</h5>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="product-sku">{{ product.sku }}</span>
+                        <span class="badge bg-secondary category-badge">{{ product.category.name }}</span>
+                    </div>
+                </div>
+                
+                <!-- Количество -->
+                <div class="flex-grow-1">
+                    {% if product.quantity == 0 %}
+                        <div class="quantity-display qty-low">0</div>
+                        <span class="quantity-label text-danger">Нет на складе</span>
+                    {% elif product.is_low_stock %}
+                        <div class="quantity-display qty-low">{{ product.quantity }}</div>
+                        <span class="quantity-label text-warning">Мало</span>
+                    {% else %}
+                        <div class="quantity-display qty-high">{{ product.quantity }}</div>
+                        <span class="quantity-label text-success">В наличии</span>
+                    {% endif %}
+                </div>
+                
+                <!-- Цена и минимум -->
+                <div class="mt-3 pt-3 border-top d-flex justify-content-between align-items-center">
+                    <span class="price-tag">
+                        <i class="bi bi-currency-ruble"></i> {{ product.price }}
+                    </span>
+                    <small class="text-muted">мин. {{ product.min_limit }}</small>
+                </div>
+                
+                <!-- Кнопки действий -->
+                <div class="mt-2 d-grid gap-2">
+                    <a href="/admin/inventory/product/{{ product.id }}/change/" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-pencil"></i> Изменить
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<!-- Пустое состояние -->
+<div class="text-center py-5">
+    <i class="bi bi-box-seam display-1 text-muted"></i>
+    <h3 class="mt-3 text-muted">Товары не найдены</h3>
+    <p class="text-muted">Добавьте первый товар через админку</p>
+    <a href="/admin/inventory/product/add/" class="btn btn-primary mt-2">
+        <i class="bi bi-plus-lg"></i> Добавить товар
+    </a>
+</div>
+{% endif %}
+{% endblock %}

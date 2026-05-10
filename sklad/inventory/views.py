@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Count, Sum, Q, F
-from .models import Product, Category, Organization
+from .models import Product, Category
 from .forms import OrganizationLoginForm
 
 
 def org_login(request):
+    """Handle organization login with Django auth."""
     if not request.user.is_authenticated:
         from django.contrib.auth.views import LoginView
         return LoginView.as_view(template_name='inventory/django_login.html')(request)
@@ -28,6 +29,7 @@ def org_login(request):
 
 
 def org_logout(request):
+    """Clear organization from session and redirect to login."""
     request.session.pop('organization_id', None)
     request.session.pop('organization_name', None)
     messages.info(request, 'Вы вышли')
@@ -35,6 +37,7 @@ def org_logout(request):
 
 
 def product_list(request):
+    """Display products list with filtering, search and statistics."""
     if not request.user.is_authenticated or not request.session.get('organization_id'):
         return redirect('inventory:org_login')
 

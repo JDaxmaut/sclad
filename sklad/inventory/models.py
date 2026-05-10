@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Organization(models.Model):
+    """Company or business entity."""
     name = models.CharField(max_length=200, verbose_name="Название организации")
     code = models.CharField(max_length=50, unique=True, verbose_name="Код организации")
 
@@ -14,6 +15,7 @@ class Organization(models.Model):
 
 
 class Category(models.Model):
+    """Product category belonging to an organization."""
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, verbose_name="Организация")
     name = models.CharField(max_length=100, verbose_name="Название категории")
 
@@ -26,6 +28,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    """Inventory item with stock tracking."""
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, verbose_name="Организация")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Категория")
     name = models.CharField(max_length=200, verbose_name="Товар")
@@ -43,4 +46,5 @@ class Product(models.Model):
 
     @property
     def is_low_stock(self):
+        """Check if quantity is at or below minimum limit."""
         return self.quantity <= self.min_limit

@@ -46,7 +46,7 @@ def product_list(request):
         products = products.filter(category_id=cat_id)
 
     if search := request.GET.get('q'):
-        products = products.filter(name__icontains=search)
+        products = products.filter(name__icontains=search) | products.filter(sku__icontains=search)
 
     stats = products.aggregate(
         low_stock=Count('id', filter=Q(quantity__gt=0, quantity__lte=F('min_limit'))),

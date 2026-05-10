@@ -45,10 +45,12 @@ def product_list(request):
     products = Product.objects.filter(organization_id=org_id)
     categories = Category.objects.filter(organization_id=org_id)
 
-    if cat_id := request.GET.get('category'):
+    cat_id = request.GET.get('category')
+    if cat_id:
         products = products.filter(category_id=cat_id)
 
-    if search := request.GET.get('q'):
+    search = request.GET.get('q')
+    if search:
         products = products.filter(name__icontains=search) | products.filter(sku__icontains=search)
 
     stats = products.aggregate(

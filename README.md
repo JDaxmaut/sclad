@@ -73,6 +73,21 @@ diplom/
 - Bootstrap 5
 - HTML/CSS/JS
 
+## Docker
+
+```bash
+# Сборка образа
+cd sklad
+docker build -t sklad .
+
+# Запуск контейнера
+docker run -p 8000:8000 sklad
+```
+
+После запуска:
+- Откройте `http://localhost:8000/admin`
+- Создайте суперпользователя: `docker exec -it <container> python manage.py createsuperuser`
+
 ## Лицензия
 
 MIT

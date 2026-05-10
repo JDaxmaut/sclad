@@ -39,7 +39,7 @@
                     <h6 class="text-muted mb-1">Всего товаров</h6>
                     <h3 class="mb-0">{{ products.count }}</h3>
                 </div>
-                <i class="bi bi-box-seam stat-icon text-primary"></i>
+                <i class="bi bi-box-seam stat-icon text-primary d-none d-sm-inline"></i>
             </div>
         </div>
     </div>
@@ -50,7 +50,7 @@
                     <h6 class="text-muted mb-1">Заканчивается</h6>
                     <h3 class="mb-0 text-warning">{{ low_stock_count }}</h3>
                 </div>
-                <i class="bi bi-exclamation-triangle stat-icon text-warning"></i>
+                <i class="bi bi-exclamation-triangle stat-icon text-warning d-none d-sm-inline"></i>
             </div>
         </div>
     </div>
@@ -61,7 +61,7 @@
                     <h6 class="text-muted mb-1">Нет на складе</h6>
                     <h3 class="mb-0 text-danger">{{ out_of_stock_count }}</h3>
                 </div>
-                <i class="bi bi-x-circle stat-icon text-danger"></i>
+                <i class="bi bi-x-circle stat-icon text-danger d-none d-sm-inline"></i>
             </div>
         </div>
     </div>
@@ -72,7 +72,7 @@
                     <h6 class="text-muted mb-1">На сумму</h6>
                     <h3 class="mb-0 text-success">{{ total_value|floatformat:0|intcomma }} ₽</h3>
                 </div>
-                <i class="bi bi-currency-ruble stat-icon text-success"></i>
+                <i class="bi bi-currency-ruble stat-icon text-success d-none d-sm-inline"></i>
             </div>
         </div>
     </div>

@@ -82,8 +82,8 @@ diplom/
 cd sklad
 docker build -t sklad .
 
-# Запуск контейнера
-docker run -p 8000:8000 sklad
+# Запуск контейнера (с сохранением БД)
+docker run -v $(pwd)/db.sqlite3:/app/db.sqlite3 -p 8000:8000 sklad
 ```
 
 После запуска:

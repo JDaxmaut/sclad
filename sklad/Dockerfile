@@ -10,4 +10,7 @@ RUN python manage.py migrate --noinput
 
 EXPOSE 8000
 
+# Volume для сохранения БД между перезапусками
+VOLUME /app/db.sqlite3
+
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

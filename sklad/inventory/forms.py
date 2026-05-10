@@ -3,7 +3,7 @@ from .models import Organization
 
 
 class OrganizationLoginForm(forms.Form):
-    """Login form with organization selection."""
+    """Форма входа с выбором организации."""
     organization = forms.ModelChoiceField(
         queryset=Organization.objects.all(),
         label="Выберите организацию",

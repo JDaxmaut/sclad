@@ -18,6 +18,7 @@
     </div>
     <div class="col-md-4">
         <form method="get" class="d-flex gap-2">
+            <input type="text" name="q" class="form-control" placeholder="Поиск..." value="{{ request.GET.q|default:'' }}">
             <select name="category" class="form-select" onchange="this.form.submit()">
                 <option value="">Все категории</option>
                 {% for cat in categories %}

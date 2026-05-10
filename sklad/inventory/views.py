@@ -45,6 +45,9 @@ def product_list(request):
     if cat_id := request.GET.get('category'):
         products = products.filter(category_id=cat_id)
 
+    if search := request.GET.get('q'):
+        products = products.filter(name__icontains=search)
+
     stats = products.aggregate(
         low_stock=Count('id', filter=Q(quantity__gt=0, quantity__lte=F('min_limit'))),
         out_of_stock=Count('id', filter=Q(quantity=0)),

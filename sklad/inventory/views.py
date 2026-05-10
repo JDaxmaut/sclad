@@ -53,6 +53,7 @@ def product_list(request):
     if search:
         products = products.filter(name__icontains=search) | products.filter(sku__icontains=search)
 
+    # Статистика: товары с низким остатком, без остатка, общая стоимость
     stats = products.aggregate(
         low_stock=Count('id', filter=Q(quantity__gt=0, quantity__lte=F('min_limit'))),
         out_of_stock=Count('id', filter=Q(quantity=0)),
